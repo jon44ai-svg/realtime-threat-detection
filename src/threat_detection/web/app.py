@@ -12,7 +12,9 @@ from urllib.parse import parse_qs, urlparse
 import cv2
 
 from threat_detection.logging_config import format_detection_line, search_logs
+from threat_detection.pipeline.decision_gate import DecisionGate
 from threat_detection.pipeline.detector import YOLOv8Detector
+from threat_detection.pipeline.temporal_buffer import TemporalBuffer
 from threat_detection.pipeline.threat_interpreter import ThreatInterpreter
 from threat_detection.pipeline.video_source import VideoSource
 
@@ -97,6 +99,8 @@ def _capture_loop(
     detector = YOLOv8Detector(weights, conf_threshold=conf, imgsz=imgsz, device=device)
     detector.load()
     interpreter = ThreatInterpreter()
+    gate = DecisionGate(conf_threshold=conf, cooldown_s=5.0)
+    buffer = TemporalBuffer()
     video = VideoSource(source)
     video.open()
     logger.info(
@@ -111,16 +115,18 @@ def _capture_loop(
             t0 = time.perf_counter()
             result = detector.predict(packet.frame)
             frame = result.annotated_frame if result.annotated_frame is not None else packet.frame
+            buffer.maybe_add(packet.frame, packet.timestamp_s, packet.frame_index)
             title = ""
-            if result.detections:
-                assessment = interpreter.interpret(result.detections)
+            decision = gate.evaluate(result)
+            if decision.triggered:
+                assessment = interpreter.interpret(decision.selected)
                 title = assessment.title
                 logger.info(
                     format_detection_line(
                         frame_index=packet.frame_index,
                         infer_ms=result.inference_ms,
                         fps=fps_ema or 0.0,
-                        detections=result.detections,
+                        detections=decision.selected,
                         threat_level=assessment.level.value,
                     )
                 )
@@ -154,6 +160,10 @@ def _capture_loop(
                     f"dets {len(result.detections)}"
                     + (f" · {title}" if title else "")
                 )
+    except Exception:
+        logger.exception("capture failed")
+        with _lock:
+            _status = "camera/model error — see logs"
     finally:
         video.close()
         logger.info("capture stopped")
@@ -161,7 +171,7 @@ def _capture_loop(
             _status = "camera stopped"
 
 
-def _make_handler() -> type[BaseHTTPRequestHandler]:
+def _make_handler(log_dir: Path) -> type[BaseHTTPRequestHandler]:
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, fmt: str, *args: object) -> None:
             logging.getLogger("threat.http").debug("%s - %s", self.address_string(), fmt % args)
@@ -198,11 +208,11 @@ def _make_handler() -> type[BaseHTTPRequestHandler]:
                 n = max(1, min(n, 2000))
                 # empty q → last n lines via matching everything with a broad read
                 if q.strip():
-                    lines = search_logs(q, limit=n)
+                    lines = search_logs(q, log_dir=log_dir, limit=n)
                 else:
                     from threat_detection.logging_config import log_path
 
-                    p = log_path()
+                    p = log_path(log_dir)
                     if p.exists():
                         all_lines = p.read_text(encoding="utf-8", errors="replace").splitlines()
                         lines = all_lines[-n:]
@@ -251,6 +261,7 @@ def serve(
     conf: float = 0.5,
     device: str = "cpu",
     imgsz: int = 640,
+    log_dir: Path = Path("logs"),
 ) -> None:
     _stop.clear()
     worker = threading.Thread(
@@ -265,7 +276,7 @@ def serve(
         daemon=True,
     )
     worker.start()
-    httpd = ThreadingHTTPServer((host, port), _make_handler())
+    httpd = ThreadingHTTPServer((host, port), _make_handler(log_dir))
     url_host = "127.0.0.1" if host in ("0.0.0.0", "::") else host
     print(f"Threat Detection → http://{url_host}:{port}/  (Ctrl+C to stop)")
     print(f"Log search → http://{url_host}:{port}/logs?q=knife")

@@ -39,6 +39,7 @@ def main() -> None:
         conf=args.conf,
         device=args.device,
         imgsz=args.imgsz,
+        log_dir=args.log_dir,
     )
 
 

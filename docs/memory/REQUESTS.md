@@ -29,6 +29,8 @@ Track what was asked, what we did, and what the user corrected or disliked.
 | R23 | 22:10 | Commit-and-push | Yes | `364dd7a` | — |
 | R24 | 22:12 | Nano size? Better than T4? RunPod=Colab? | Yes (advice) | Keep n; T4 OK; RunPod not drop-in | — |
 | R25 | 22:16 | Persistent memory / worklog files | Yes | `docs/memory/*` + cursor rule | — |
+| R26 | 22:26 | Ponytail: complete MVP, track subtasks/status/memory, use subagents/codegraph, propose data/model improvements, research online, ask before persistent research archive | Partially complete | Hardened web MVP; added data strategy; used audit/research subagents; searched online; updated memory | Codegraph unavailable; research-folder inclusion intentionally awaiting user choice |
+| R27 | 22:28 | Include selected related sources in persistent research folder | Yes | Added `docs/research/README.md` with citations and license/use notes | Raw data deliberately excluded pending license review |
 
 ## Themes the user pushed back on
 
@@ -44,3 +46,4 @@ Track what was asked, what we did, and what the user corrected or disliked.
 - Update `WORKLOG.md` + `STATUS.md` when status changes.
 - Ask before reversing user choices.
 - Guess one-and-done vs long-term (already long-term here).
+- Do not silently download/merge third-party datasets; verify license and class mapping first.

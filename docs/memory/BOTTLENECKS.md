@@ -16,6 +16,8 @@ What is waiting on what. Update when a blocker clears.
 | B10 | Cleaner live logs | Was thin INFO-only; **mitigated** by persistent verbose log + search | — | Resolved | 2026-09-25 22:05 |
 | B11 | Colab imports | Was `ModuleNotFoundError`; **mitigated** by editable install + `sys.path` | — | Resolved | 2026-09-25 20:47 |
 | B12 | `data.yaml` path | Ultralytics cwd-relative path; **fixed** to `data/raw` | — | Resolved | 2026-09-25 19:xx |
+| B13 | Persistent research folder | Resolved for citations; raw downloads still require license review | Research index exists | Low | 2026-09-25 22:28 |
+| B14 | Codegraph request | No codegraph tool is exposed in this Cursor session | Manual dependency/runtime graph audit | Low | 2026-09-25 22:26 |
 
 ## Critical path (now)
 
@@ -32,3 +34,9 @@ Copy best.pt local → serve/run_pipeline --conf 0.65
 ## Dependency install bottleneck (standing)
 
 Any new Python package: **`uv lock` → Trivy → `uv sync`**. Never install first.
+
+## MVP hardening completed 2026-09-25 22:26
+
+The web runtime now propagates custom log directories, reports capture-thread
+exceptions in `/status` and the persistent log, and applies the same confidence
+gate/cooldown and temporal buffering used by the desktop pipeline.

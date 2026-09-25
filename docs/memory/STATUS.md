@@ -1,7 +1,7 @@
 # Project status
 
-**Last updated:** 2026-09-25 22:16 Asia/Jerusalem (+03)  
-**Branch:** `feat/initial-workspace` @ `364dd7a`  
+**Last updated:** 2026-09-25 22:28 Asia/Jerusalem (+03)  
+**Branch:** `feat/initial-workspace` @ `ffe69f2` (local MVP fixes uncommitted)  
 **Hardware (local):** Windows · AMD Ryzen / Vega 8 + Intel iGPU · **no NVIDIA CUDA** · webcam index 0  
 **Hardware (train):** Colab **Tesla T4** · yolov8n · batch 16 · imgsz 640
 
@@ -17,7 +17,7 @@
 | Pipeline stubs (VLM / email / desktop) | Stubbed; live path skips VLM |
 | GitHub remote + Colab notebook | Done |
 | Local smoke train (CPU, fraction) | Done |
-| Live webcam + hostable MJPEG web UI | Done |
+| Live webcam + hostable MJPEG web UI | Done; web MVP hardening added |
 | Persistent logs + search | Done |
 | Colab Drive `sync_artifacts` | Done (in notebook; must be run) |
 | Colab **50-epoch** finished `best.pt` | **In progress** (~epoch 20/50 when last reported; mAP50 ~0.47–0.52) |
@@ -27,6 +27,9 @@
 | Domain-gap dataset mix (webcam-like) | Not started (optional after Table II) |
 | Gemini VLM 2-stage | Stub |
 | Email / desktop alerts | Stub (logging only) |
+| Runtime failure visibility / web cooldown | Done |
+| Dataset merge/preprocessing strategy | Documented; no third-party data merged |
+| Related research shortlist | Archived in `docs/research/README.md` (links/caveats only) |
 
 ---
 
@@ -37,12 +40,13 @@
 3. Copy named `best.pt` from Drive to local; serve with `--conf ~0.65`.
 4. Optional later: free Roboflow/CCTV mix + own webcam frames for domain gap.
 5. Optional later: implement VLM / real alerts.
+6. If desired, later download selected datasets after license review.
 
 ---
 
 ## Bottlenecks (one-liners)
 
-See [`BOTTLENECKS.md`](BOTTLENECKS.md). Primary: **usable live detection quality is bottlenecked by unfinished GPU training**, not by webcam code.
+See [`BOTTLENECKS.md`](BOTTLENECKS.md). Primary: **usable live detection quality is bottlenecked by unfinished GPU training**, not by webcam code. Codegraph was requested but is unavailable in the exposed tool catalog.
 
 ---
 

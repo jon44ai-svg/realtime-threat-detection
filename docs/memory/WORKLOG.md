@@ -202,3 +202,23 @@ Format per entry:
 **Missing / blocked:** Unchanged (Colab 50 still in flight).  
 **User ask:** Write persistent memory files with worklog, status timestamps, missing, bottlenecks, requests/fulfillment, disapprovals.  
 **Notes:** Agents should append WORKLOG and refresh STATUS after meaningful updates.
+
+---
+
+## 2026-09-25 22:26 — MVP hardening and research shortlist
+
+**Status:** Minimum local MVP is operational with a checkpoint; runtime gaps hardened.  
+**Changed:** Web capture now uses confidence/cooldown gating and temporal buffering; custom log directories reach `/logs`; capture-thread failures update status and persist tracebacks. Added `docs/DATA_STRATEGY.md`.  
+**Missing / blocked:** No trained checkpoint is committed; Colab 50/100 completion remains the quality bottleneck. VLM and external alerts remain intentionally stubbed.  
+**User ask:** Implement missing MVP pieces with subtasks/subagents, use codegraph, propose dataset/model improvements, search related projects/papers, and ask before adding them to persistent research.  
+**Notes:** Used two subagents for MVP audit and research. No codegraph tool exists in the exposed catalog. Research candidates are not archived yet pending user choice. Search findings include FiDaSS, US CCTV/mock-attack, Simuletic CCTV, Mendeley firearm-action data, RWF-2000, UCF-Crime, XD-Violence, ViDD, hard-negative mining, and SF-YOLO.
+
+---
+
+## 2026-09-25 22:28 — Research folder approved
+
+**Status:** User selected detection, temporal, and method candidates for persistent research notes.  
+**Changed:** Added `docs/research/README.md` with links, license caveats, use cases, and experiment order; no raw datasets downloaded.  
+**Missing / blocked:** Dataset acquisition still requires per-source license review and should happen after the paper baseline.  
+**User ask:** Include the researched related projects/papers in the persistent research folder.  
+**Notes:** Selected: FiDaSS, US CCTV/mock-attack, Simuletic, YouTube-GDD, Mendeley firearm-action, RWF-2000, UCF-Crime, XD-Violence, ViDD, hard-negative mining, and SF-YOLO.
