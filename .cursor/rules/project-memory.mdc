@@ -1,0 +1,31 @@
+---
+description: Project memory — always read STATUS/WORKLOG before changing direction
+alwaysApply: true
+---
+
+# Realtime Threat Detection — Memory Index
+
+**Long-term project** (user chose Scope C). Repo: `C:\Users\jonmo\Projects\realtime-threat-detection`  
+Remote: `git@github.com:jon44ai-svg/realtime-threat-detection.git` · branch `feat/initial-workspace`
+
+## Read these first
+
+| File | Purpose |
+|------|---------|
+| [`docs/memory/STATUS.md`](../../docs/memory/STATUS.md) | Current status, missing items, bottlenecks |
+| [`docs/memory/WORKLOG.md`](../../docs/memory/WORKLOG.md) | Timestamped status snapshots + what changed |
+| [`docs/memory/REQUESTS.md`](../../docs/memory/REQUESTS.md) | User requests, how fulfilled, pushback/disapprovals |
+| [`docs/memory/BOTTLENECKS.md`](../../docs/memory/BOTTLENECKS.md) | What blocks what |
+
+## Hard constraints (user)
+
+1. **uv install order:** `uv lock` → Trivy scan → only then `uv sync` / install.
+2. **Do not edit the plan file** the user attached for implementation.
+3. Prefer **pnpm** (JS) / **uv** (Python); PowerShell (no `&&`).
+4. Respect user corrections; ask before reverting their choices.
+5. Guess one-and-done vs long-term — this repo is **long-term**.
+6. When `/ponytail` is active: shortest working diff; no speculative scaffolding.
+
+## After meaningful work
+
+Append a dated entry to `docs/memory/WORKLOG.md` and refresh `STATUS.md` (missing / bottlenecks / next).
