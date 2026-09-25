@@ -252,3 +252,23 @@ Format per entry:
 **Missing / blocked:** 100-epoch checkpoint and Drive authorization.  
 **User ask:** Unzip the Downloads backup and use it without replacing existing files.  
 **Notes:** Use this checkpoint for the local webcam/web test.
+
+---
+
+## 2026-09-25 23:16 — Local camera data collector
+
+**Status:** Persistent browser collector implemented and verified with 10 passing tests.  
+**Changed:** Added `scripts/collect_data.py` and `threat_detection.data_collection`; captures PC/phone browser frames, front/back camera selection, labels, notes, JPEGs, and JSONL metadata under ignored `data/collected/<session>/`. Default is localhost; LAN mode is opt-in, token-protected, bounded, single-threaded, and optionally HTTPS.  
+**Missing / blocked:** Phone camera access on a LAN normally requires a trusted HTTPS certificate; no server can guarantee absolute DDoS safety.  
+**User ask:** Create a persistent webcam/phone front/back camera collection website stored on this PC and make it safe.  
+**Notes:** Raw collected data is intentionally gitignored.
+
+---
+
+## 2026-09-25 23:09 — Live false positives observed
+
+**Status:** Local 50-epoch checkpoint runs, but produced a gun false positive and classified a pencil as `blunt_object`.  
+**Changed:** Diagnosis recorded; no speculative retraining or threshold change applied.  
+**Missing / blocked:** Webcam-domain hard negatives and stronger blunt-object validation remain missing.  
+**User ask:** Asked what could cause these detections.  
+**Notes:** Likely causes: domain gap, no explicit negative class, broad/underrepresented blunt labels (91 validation instances; mAP50 0.602), class imbalance, and 50-epoch baseline quality. A higher confidence threshold reduces false positives at the cost of recall; hard-negative webcam frames are the durable fix.

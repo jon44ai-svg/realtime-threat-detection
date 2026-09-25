@@ -136,6 +136,31 @@ uv run python scripts/serve.py --weights path\to\best.pt --source 0 --device cpu
 
 Open http://127.0.0.1:7860/ — press Ctrl+C in the terminal to stop. VLM stays stubbed; detections still label threat levels on the stream.
 
+## Collect webcam/phone training frames
+
+The browser collector saves labeled JPEGs and JSONL metadata on this PC. It
+binds to localhost by default:
+
+```powershell
+uv run python scripts/collect_data.py
+```
+
+Open the printed URL, allow camera access, choose **Front** or **Back** on a
+phone, select a label, and capture frames. Files go under ignored
+`data/collected/<session>/`.
+
+For a phone on the same trusted LAN only:
+
+```powershell
+uv run python scripts/collect_data.py --host 0.0.0.0 --certfile cert.pem --keyfile key.pem
+```
+
+Use the printed LAN token URL. Phone browsers generally require HTTPS for
+camera access; create a local certificate with your trusted local certificate
+tool and install/trust it on the phone. For PC-only localhost capture, omit the
+TLS flags. Do not port-forward this server or expose it to the public
+internet; no local HTTP server can guarantee absolute DDoS safety.
+
 ## Tests
 
 ```powershell

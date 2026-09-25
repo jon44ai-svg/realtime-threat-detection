@@ -22,6 +22,7 @@ kaggle.json
 # Data & training artifacts
 data/raw/
 data/processed/
+data/collected/
 runs/
 weights/
 *.pt

@@ -18,6 +18,8 @@
 | GitHub remote + Colab notebook | Done |
 | Local smoke train (CPU, fraction) | Done |
 | Live webcam + hostable MJPEG web UI | Done; web MVP hardening added |
+| Live demo quality | Works; gun false positive and pencil→blunt false positive observed |
+| Local camera data collector | Done; browser snapshots persist locally with labels/metadata |
 | Persistent logs + search | Done |
 | Colab Drive `sync_artifacts` | Done (in notebook; must be run) |
 | Colab **50-epoch** finished `best.pt` | Done: mAP50 0.736, mAP50-95 0.486, recall 0.672 |
@@ -41,6 +43,7 @@
 4. Optional later: free Roboflow/CCTV mix + own webcam frames for domain gap.
 5. Optional later: implement VLM / real alerts.
 6. If desired, later download selected datasets after license review.
+7. Collect webcam/phone hard negatives before retraining.
 
 ---
 
