@@ -1,0 +1,12 @@
+# YOLO dataset config — paths are relative to this file's directory.
+# After download, train/val/test point into ../data/raw/...
+path: ../data/raw/custum-dataset-and-public-data-for-model-training
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 3
+names:
+  0: blunt_object
+  1: gun
+  2: knife

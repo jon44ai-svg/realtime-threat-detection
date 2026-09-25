@@ -1,0 +1,16 @@
+# Training hyperparameters for 100-epoch run (paper final model).
+# Tuned for ~4GB VRAM (e.g. GTX 1650). Raise batch if you have more memory.
+model: yolov8n.pt
+data: configs/data.yaml
+epochs: 100
+imgsz: 640
+batch: 8
+device: 0
+workers: 4
+project: runs/detect
+name: train_100
+exist_ok: true
+patience: 100
+seed: 0
+save: true
+plots: true

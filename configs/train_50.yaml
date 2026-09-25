@@ -1,0 +1,16 @@
+# Training hyperparameters for 50-epoch run (paper Table II checkpoint).
+# Tuned for ~4GB VRAM (e.g. GTX 1650). Raise batch if you have more memory.
+model: yolov8n.pt
+data: configs/data.yaml
+epochs: 50
+imgsz: 640
+batch: 8
+device: 0
+workers: 4
+project: runs/detect
+name: train_50
+exist_ok: true
+patience: 50
+seed: 0
+save: true
+plots: true
