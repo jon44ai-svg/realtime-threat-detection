@@ -16,7 +16,7 @@ Reference copies live in [`docs/`](docs/) (paper PDF + original Colab notebook).
 | EDA (tree, split counts, annotation viz) | Implemented |
 | YOLOv8 train 50 / 100 epochs @ 640 | Implemented |
 | Val metrics vs paper Table II | Implemented |
-| Live webcam / RTSP capture | **Stub** |
+| Live webcam / RTSP capture | Implemented (desktop + hostable web MJPEG) |
 | Gemini 2.5 Flash Lite two-stage VLM | **Stub** |
 | Email / desktop alerts | **Stub** (logging works) |
 
@@ -120,13 +120,21 @@ SSH remote: `git@github.com:jon44ai-svg/realtime-threat-detection.git`
 
 Do **not** commit `data/raw/`, `runs/`, `.env`, or `kaggle.json` (already gitignored).
 
-## Pipeline stub
+## Live webcam (this machine)
+
+Desktop OpenCV window:
 
 ```powershell
-uv run python scripts/run_pipeline.py --describe-only
+uv run python scripts/run_pipeline.py --weights path\to\best.pt --source 0 --device cpu
 ```
 
-Stages follow paper Fig. 1 under `src/threat_detection/pipeline/`.
+Hostable website (LAN: bind `0.0.0.0:7860`):
+
+```powershell
+uv run python scripts/serve.py --weights path\to\best.pt --source 0 --device cpu
+```
+
+Open http://127.0.0.1:7860/ — press Ctrl+C in the terminal to stop. VLM stays stubbed; detections still label threat levels on the stream.
 
 ## Tests
 

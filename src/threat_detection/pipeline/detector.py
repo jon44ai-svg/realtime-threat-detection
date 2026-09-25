@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -64,9 +65,11 @@ class YOLOv8Detector:
         if self.device is not None:
             kwargs["device"] = self.device
 
+        t0 = time.perf_counter()
         results = self._model.predict(**kwargs)
+        inference_ms = (time.perf_counter() - t0) * 1000.0
         if not results:
-            return DetectionResult()
+            return DetectionResult(inference_ms=inference_ms)
 
         r0 = results[0]
         names = r0.names if hasattr(r0, "names") else {}
@@ -91,4 +94,9 @@ class YOLOv8Detector:
                 )
 
         annotated = r0.plot() if hasattr(r0, "plot") else None
-        return DetectionResult(detections=detections, annotated_frame=annotated)
+        return DetectionResult(
+            detections=detections,
+            annotated_frame=annotated,
+            inference_ms=inference_ms,
+        )
+

@@ -28,6 +28,7 @@ dev = [
 threat-download = "threat_detection.data.download:main"
 threat-train = "threat_detection.training.train:main"
 threat-eval = "threat_detection.training.evaluate:main"
+threat-serve = "threat_detection.web.cli:main"
 
 [build-system]
 requires = ["hatchling"]
