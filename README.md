@@ -114,7 +114,9 @@ git push -u origin HEAD
 
 Then in Colab, clone:
 
-`https://github.com/<you>/realtime-threat-detection.git` branch `feat/initial-workspace`
+`https://github.com/jon44ai-svg/realtime-threat-detection.git` branch `feat/initial-workspace`
+
+SSH remote: `git@github.com:jon44ai-svg/realtime-threat-detection.git`
 
 Do **not** commit `data/raw/`, `runs/`, `.env`, or `kaggle.json` (already gitignored).
 
