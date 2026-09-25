@@ -222,3 +222,33 @@ Format per entry:
 **Missing / blocked:** Dataset acquisition still requires per-source license review and should happen after the paper baseline.  
 **User ask:** Include the researched related projects/papers in the persistent research folder.  
 **Notes:** Selected: FiDaSS, US CCTV/mock-attack, Simuletic, YouTube-GDD, Mendeley firearm-action, RWF-2000, UCF-Crime, XD-Violence, ViDD, hard-negative mining, and SF-YOLO.
+
+---
+
+## 2026-09-25 22:53 — Colab 50-epoch baseline completed
+
+**Status:** 50 epochs completed successfully on Tesla T4 in 1.212 hours.  
+**Changed:** `best.pt` and `last.pt` produced; evaluation completed. Overall precision 0.7434, recall 0.6720, mAP50 0.7359, mAP50-95 0.4861. Per-class mAP50: blunt 0.6015, gun 0.8769, knife 0.7292.  
+**Missing / blocked:** Drive persistence cell is waiting at `drive.mount()` or its authorization prompt. 100-epoch run has not started.  
+**User ask:** Reported completed training output and asked whether the Drive cell hanging over one minute is normal.  
+**Notes:** Recall is essentially at the paper 50-epoch target; mAP50 is 0.041 below target. This is a good baseline, not a failure.
+
+---
+
+## 2026-09-25 22:59 — 50-epoch backup secured
+
+**Status:** User has the `train50_backup` archive in local Downloads.  
+**Changed:** 50-epoch checkpoint/results are no longer dependent on the current Colab runtime.  
+**Missing / blocked:** Google Drive credential propagation still fails; 100-epoch persistence method remains to be secured.  
+**User ask:** Confirmed the train-50 backup was downloaded.  
+**Notes:** Do not restart the Colab runtime until 100-epoch work is either backed up or a persistence path succeeds.
+
+---
+
+## 2026-09-25 23:02 — Train-50 checkpoint extracted locally
+
+**Status:** Backup extracted without replacing existing files.  
+**Changed:** New ignored path: `runs/colab_train50_backup/detect/train_50/weights/best.pt`; Ultralytics loaded it successfully with classes `blunt_object`, `gun`, `knife`.  
+**Missing / blocked:** 100-epoch checkpoint and Drive authorization.  
+**User ask:** Unzip the Downloads backup and use it without replacing existing files.  
+**Notes:** Use this checkpoint for the local webcam/web test.

@@ -1,6 +1,6 @@
 # Project status
 
-**Last updated:** 2026-09-25 22:28 Asia/Jerusalem (+03)  
+**Last updated:** 2026-09-25 22:53 Asia/Jerusalem (+03)  
 **Branch:** `feat/initial-workspace` @ `ffe69f2` (local MVP fixes uncommitted)  
 **Hardware (local):** Windows · AMD Ryzen / Vega 8 + Intel iGPU · **no NVIDIA CUDA** · webcam index 0  
 **Hardware (train):** Colab **Tesla T4** · yolov8n · batch 16 · imgsz 640
@@ -20,9 +20,9 @@
 | Live webcam + hostable MJPEG web UI | Done; web MVP hardening added |
 | Persistent logs + search | Done |
 | Colab Drive `sync_artifacts` | Done (in notebook; must be run) |
-| Colab **50-epoch** finished `best.pt` | **In progress** (~epoch 20/50 when last reported; mAP50 ~0.47–0.52) |
+| Colab **50-epoch** finished `best.pt` | Done: mAP50 0.736, mAP50-95 0.486, recall 0.672 |
 | Colab **100-epoch** run | Not started |
-| Pull weights to local / Drive verified | Missing |
+| Pull weights to local / Drive verified | 50-epoch ZIP extracted safely; checkpoint loads locally; Drive still unverified |
 | Live demo with good boxes | Blocked on finished 50/100 weights |
 | Domain-gap dataset mix (webcam-like) | Not started (optional after Table II) |
 | Gemini VLM 2-stage | Stub |
@@ -35,7 +35,7 @@
 
 ## Missing (actionable)
 
-1. Finish Colab 50 → `sync_artifacts("after_epochs50")` → evaluate vs Table II.
+1. Sync Colab 50 artifacts to Drive; the current mount cell is waiting for authorization.
 2. Run 100 epochs → sync → evaluate.
 3. Copy named `best.pt` from Drive to local; serve with `--conf ~0.65`.
 4. Optional later: free Roboflow/CCTV mix + own webcam frames for domain gap.
