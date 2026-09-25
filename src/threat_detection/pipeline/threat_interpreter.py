@@ -47,7 +47,7 @@ class ThreatInterpreter:
 
         detail = vlm_report.summary if vlm_report else "VLM report unavailable (stub)."
         title = f"{level.value}: {', '.join(sorted(class_names)) or 'unknown'}"
-        logger.info("ThreatInterpreter -> %s", level.value)
+        logger.debug("ThreatInterpreter -> %s", level.value)
         return ThreatAssessment(
             level=level,
             title=title,

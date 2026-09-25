@@ -40,4 +40,5 @@ Thumbs.db
 
 # Logs / plots generated locally
 *.log
+logs/
 outputs/

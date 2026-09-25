@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import logging
 import sys
 from pathlib import Path
 
@@ -13,6 +12,7 @@ _SRC = _ROOT / "src"
 if _SRC.is_dir() and str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
+from threat_detection.logging_config import setup_logging
 from threat_detection.pipeline.orchestrator import PipelineConfig, SurveillanceOrchestrator
 
 
@@ -24,7 +24,6 @@ def _parse_source(raw: str) -> str | int:
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     parser = argparse.ArgumentParser(description="Live surveillance pipeline (webcam + YOLO)")
     parser.add_argument(
         "--weights",
@@ -72,7 +71,10 @@ def main() -> None:
         action="store_true",
         help="Only print planned stages (do not open the camera)",
     )
+    parser.add_argument("--log-dir", type=Path, default=Path("logs"))
+    parser.add_argument("--quiet", action="store_true", help="Less verbose (INFO only)")
     args = parser.parse_args()
+    setup_logging(log_dir=args.log_dir, verbose=not args.quiet)
 
     config = PipelineConfig(
         weights=args.weights,

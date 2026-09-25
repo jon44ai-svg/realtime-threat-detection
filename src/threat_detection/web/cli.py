@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import argparse
-import logging
 import sys
 from pathlib import Path
 
+from threat_detection.logging_config import setup_logging
 from threat_detection.web.app import serve
 
 
@@ -16,7 +16,6 @@ def _parse_source(raw: str) -> str | int:
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     p = argparse.ArgumentParser(description="Host live threat-detection website")
     p.add_argument("--weights", type=Path, required=True, help="Trained YOLO .pt")
     p.add_argument("--source", default="0", help="Webcam index / file / RTSP")
@@ -25,7 +24,10 @@ def main() -> None:
     p.add_argument("--conf", type=float, default=0.5)
     p.add_argument("--device", default="cpu")
     p.add_argument("--imgsz", type=int, default=640)
+    p.add_argument("--log-dir", type=Path, default=Path("logs"))
+    p.add_argument("--quiet", action="store_true", help="Less verbose (INFO only)")
     args = p.parse_args()
+    setup_logging(log_dir=args.log_dir, verbose=not args.quiet)
     if not args.weights.exists():
         print(f"Weights not found: {args.weights}", file=sys.stderr)
         sys.exit(1)

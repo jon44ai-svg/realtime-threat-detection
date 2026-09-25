@@ -15,6 +15,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from threat_detection.logging_config import format_detection_line
 from threat_detection.pipeline.alerts import AlertService
 from threat_detection.pipeline.decision_gate import DecisionGate
 from threat_detection.pipeline.detector import DetectionResult, YOLOv8Detector
@@ -23,7 +24,7 @@ from threat_detection.pipeline.threat_interpreter import ThreatAssessment, Threa
 from threat_detection.pipeline.video_source import VideoSource
 from threat_detection.pipeline.vlm_analyzer import VLMAnalyzer, VLMReport
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("threat.detect")
 
 PIPELINE_STAGES = [
     "VideoSource (webcam/file @ ~30 FPS)",
@@ -132,6 +133,26 @@ class SurveillanceOrchestrator:
                         )
                         self.alerts.notify(assessment)
                         self._last_assessment = assessment
+                        logger.info(
+                            format_detection_line(
+                                frame_index=packet.frame_index,
+                                infer_ms=infer_ms,
+                                fps=fps_ema,
+                                detections=decision.selected,
+                                threat_level=assessment.level.value,
+                            )
+                        )
+                    elif result.detections:
+                        logger.debug(
+                            format_detection_line(
+                                frame_index=packet.frame_index,
+                                infer_ms=infer_ms,
+                                fps=fps_ema,
+                                detections=result.detections,
+                                threat_level=None,
+                            )
+                            + f" gate={decision.reason}"
+                        )
 
                     dt = time.perf_counter() - t0
                     inst_fps = 1.0 / dt if dt > 0 else 0.0
