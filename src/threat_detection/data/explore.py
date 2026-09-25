@@ -12,9 +12,7 @@ import numpy as np
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_DATASET = (
-    PROJECT_ROOT / "data" / "raw" / "custum-dataset-and-public-data-for-model-training"
-)
+DEFAULT_DATASET = PROJECT_ROOT / "data" / "raw"
 DEFAULT_OUT = PROJECT_ROOT / "runs" / "eda"
 
 

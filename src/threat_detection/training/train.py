@@ -58,6 +58,8 @@ def train(
         "plots": bool(cfg.get("plots", True)),
         "workers": int(cfg.get("workers", 4)),
     }
+    if "fraction" in cfg:
+        train_kwargs["fraction"] = float(cfg["fraction"])
     device = device_override if device_override is not None else cfg.get("device", "0")
     train_kwargs["device"] = device
 
@@ -85,14 +87,13 @@ def main(argv: list[str] | None = None) -> None:
         "--config",
         type=Path,
         default=PROJECT_ROOT / "configs" / "train_100.yaml",
-        help="Training YAML (train_50.yaml or train_100.yaml)",
+        help="Training YAML (train_50/100/smoke.yaml)",
     )
     parser.add_argument(
         "--epochs",
         type=int,
-        choices=[50, 100],
         default=None,
-        help="Shorthand: pick configs/train_{N}.yaml",
+        help="Shorthand: use configs/train_{N}.yaml for 50/100, or override epoch count with --config",
     )
     parser.add_argument(
         "--model",
@@ -106,13 +107,28 @@ def main(argv: list[str] | None = None) -> None:
         default=None,
         help="Ultralytics device (0, cpu, ...)",
     )
+    parser.add_argument(
+        "--smoke",
+        action="store_true",
+        help="Run 2-epoch smoke config (configs/train_smoke.yaml)",
+    )
     args = parser.parse_args(argv)
 
     config = args.config
-    if args.epochs is not None:
+    epochs_override = None
+    if args.smoke:
+        config = PROJECT_ROOT / "configs" / "train_smoke.yaml"
+    elif args.epochs in (50, 100):
         config = PROJECT_ROOT / "configs" / f"train_{args.epochs}.yaml"
+    elif args.epochs is not None:
+        epochs_override = args.epochs
 
-    train(config, model_override=args.model, device_override=args.device)
+    train(
+        config,
+        model_override=args.model,
+        device_override=args.device,
+        epochs_override=epochs_override,
+    )
 
 
 if __name__ == "__main__":

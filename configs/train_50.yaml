@@ -1,12 +1,12 @@
-# Training hyperparameters for 50-epoch run (paper Table II checkpoint).
-# Tuned for ~4GB VRAM (e.g. GTX 1650). Raise batch if you have more memory.
+# Colab / NVIDIA GPU defaults (override locally with --device cpu)
+# Local AMD Vega / CPU machines should pass --device cpu.
 model: yolov8n.pt
 data: configs/data.yaml
 epochs: 50
 imgsz: 640
-batch: 8
+batch: 16
 device: 0
-workers: 4
+workers: 2
 project: runs/detect
 name: train_50
 exist_ok: true

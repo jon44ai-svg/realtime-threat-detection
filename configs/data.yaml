@@ -1,6 +1,5 @@
-# YOLO dataset config — paths are relative to this file's directory.
-# After download, train/val/test point into ../data/raw/...
-path: ../data/raw/custum-dataset-and-public-data-for-model-training
+# Ultralytics resolves `path` from the process cwd (project root), not this file.
+path: data/raw
 train: train/images
 val: valid/images
 test: test/images

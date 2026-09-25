@@ -1,12 +1,11 @@
-# Training hyperparameters for 100-epoch run (paper final model).
-# Tuned for ~4GB VRAM (e.g. GTX 1650). Raise batch if you have more memory.
+# Colab / NVIDIA GPU defaults (override locally with --device cpu)
 model: yolov8n.pt
 data: configs/data.yaml
 epochs: 100
 imgsz: 640
-batch: 8
+batch: 16
 device: 0
-workers: 4
+workers: 2
 project: runs/detect
 name: train_100
 exist_ok: true

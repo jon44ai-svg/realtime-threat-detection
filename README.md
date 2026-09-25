@@ -22,11 +22,22 @@ Reference copies live in [`docs/`](docs/) (paper PDF + original Colab notebook).
 
 ## Setup
 
-Requires **Python ≥ 3.10** (project pins **3.11** via `.python-version`) and [uv](https://github.com/astral-sh/uv).
+Requires **Python ≥ 3.10** (project pins **3.11** via `.python-version`), [uv](https://github.com/astral-sh/uv), and [Trivy](https://trivy.dev/) for dependency verification.
+
+**Install order (resolve → verify → install):** never `uv sync` until the lockfile has been scanned.
 
 ```powershell
 cd ~/Projects/realtime-threat-detection
+
+# 1. Resolve versions only (no install)
+uv lock --python 3.11
+
+# 2. Scan lockfile / project with Trivy (HIGH+CRITICAL)
+pwsh scripts/verify_deps.ps1
+
+# 3. Install only after a clean (or accepted) scan
 uv sync --extra dev
+
 copy .env.example .env
 ```
 
@@ -41,29 +52,34 @@ https://www.kaggle.com/datasets/gajendramandalcsvtu/custum-dataset-and-public-da
 
 ## Reproduce detection results
 
+### Local smoke test (CPU / Vega — no CUDA)
+
 ```powershell
-# 1. Download ~274MB consolidated dataset (train/valid/test YOLO layout)
 uv run python scripts/download_data.py
+uv run python scripts/train.py --smoke --device cpu
+```
 
-# 2. Optional EDA (writes plots under runs/eda/)
-uv run python scripts/explore_data.py
+Full 50/100-epoch runs are **slow on CPU**. Prefer Colab GPU below.
 
-# 3. Train (default yolov8n @ 640, batch=8 for ~4GB VRAM)
-uv run python scripts/train.py --epochs 50
-uv run python scripts/train.py --epochs 100
+### Local full train (if you have NVIDIA CUDA)
 
-# Optional larger model if you have more VRAM:
-# uv run python scripts/train.py --epochs 100 --model yolov8s.pt
-
-# CPU-only:
-# uv run python scripts/train.py --epochs 50 --device cpu
-
-# 4. Evaluate vs paper Table II
-uv run python scripts/evaluate.py --weights runs/detect/train_50/weights/best.pt --epochs 50
+```powershell
+uv run python scripts/train.py --epochs 50 --device 0
+uv run python scripts/train.py --epochs 100 --device 0
 uv run python scripts/evaluate.py --weights runs/detect/train_100/weights/best.pt --epochs 100
 ```
 
-Interactive EDA notebook: [`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb).
+Configs default to `device: cpu` for this machine. Override with `--device 0` on Colab/NVIDIA.
+
+### Colab GPU (recommended for Table II)
+
+1. Push this repo to GitHub (see below).
+2. Open [`notebooks/colab_train.ipynb`](notebooks/colab_train.ipynb) in Colab **or** File → Upload notebook.
+3. Runtime → Change runtime type → **GPU**.
+4. Set `REPO_URL` / `BRANCH` in the first cell; upload `kaggle.json` to `/content/`.
+5. Run all cells (download → train 50 → eval → train 100 → eval).
+
+Interactive EDA: [`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb).
 
 ### Paper Table II targets (100 epochs)
 
@@ -80,6 +96,27 @@ Interactive EDA notebook: [`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb).
 Exact numeric match is **not** expected (GPU, seed, Ultralytics version). Use the comparison table from `evaluate.py` as a guide.
 
 Classes in `configs/data.yaml`: `blunt_object`, `gun`, `knife`.
+
+## Push to GitHub (then open in Colab)
+
+`gh` must be logged in once: `gh auth login`
+
+```powershell
+cd ~/Projects/realtime-threat-detection
+git add -A
+git status   # confirm data/raw and .env are NOT listed
+git commit -m "Prepare Colab GPU training workflow and local smoke config."
+# first push — creates repo under your account
+gh repo create realtime-threat-detection --private --source=. --remote=origin --push
+# later pushes
+git push -u origin HEAD
+```
+
+Then in Colab, clone:
+
+`https://github.com/<you>/realtime-threat-detection.git` branch `feat/initial-workspace`
+
+Do **not** commit `data/raw/`, `runs/`, `.env`, or `kaggle.json` (already gitignored).
 
 ## Pipeline stub
 
@@ -98,13 +135,13 @@ uv run pytest
 ## Layout
 
 ```
-configs/          # data.yaml, train_50.yaml, train_100.yaml
+configs/          # data.yaml, train_50/100/smoke.yaml
 src/threat_detection/
   data/           # download + explore
   training/       # train + evaluate
   pipeline/       # live system stubs
-scripts/          # CLI entrypoints
-notebooks/        # cleaned EDA notebook
+scripts/          # CLI entrypoints + verify_deps.ps1
+notebooks/        # 01_eda.ipynb + colab_train.ipynb
 docs/             # paper + original notebook
 data/raw/         # gitignored dataset
 runs/             # gitignored Ultralytics + EDA outputs
